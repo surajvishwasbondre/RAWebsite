@@ -4,55 +4,55 @@ on:
   push:
     branches:
       - main
-   #schedule:
-   # - cron: "* * * * * *"
-  workflow_dispatch: null
+  # Uncomment below if you want to schedule runs
+  # schedule:
+  #   - cron: "* * * * *"
+  workflow_dispatch:
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Set up JDK
-      uses: actions/setup-java@v3
-      with:
-        distribution: 'adopt'
-        java-version: '11'  # Specify your Java version here
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'adopt'
+          java-version: '11'
 
-    - name: Cache Maven packages
-      uses: actions/cache@v4
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven
 
-      with:
-        path: ~/.m2
-        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-maven
+      - name: Install dependencies
+        run: mvn -B package --file pom.xml
 
-    - name: Install dependencies
-      
-      run: mvn -B package --file pom.xml
-      #run: mvn install
+      - name: Run tests
+        run: mvn test -Dtest=LandingPagesAffiliateMarketingTest
 
-    - name: Run tests
-      run: mvn test -Dtest=LandingPagesAffiliateMarketingTest
+      - name: Upload test result file
+        uses: actions/upload-artifact@v3
 
-    - name: Upload test result file
-      uses: actions/upload-artifact@v3.1.2
+        with:
+          name: test-results
+          path: "TestData/LandingPageAutomation-Affiliate Marketing.xlsx"
 
-      with:
-        name: test-results
-        path: TestData/LandingPageAutomation-Affiliate Marketing.xlsx  # Specify the path to your result file
-
-    - name: Send email with test results
-      uses: dawidd6/action-send-mail@v3
-      with:
-        server_address: smtp.example.com
-        server_port: 587
-        username: ${{ secrets.MAIL_USERNAME }}
-        password: ${{ secrets.MAIL_PASSWORD }}
-        subject: Landing Pages Test Results
-        body: The test results are attached.
-        to: surajbondre@1176gmail.com
-        from: surajbondre7@gmail.com
-        attachments: TestData/LandingPageAutomation-Affiliate Marketing.xlsx  # Specify the path to your result file
+      - name: Send email with test results
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.example.com
+          server_port: 587
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: Landing Pages Test Results
+          body: The test results are attached.
+          to: surajbondre@1176gmail.com
+          from: surajbondre7@gmail.com
+          attachments: "TestData/LandingPageAutomation-Affiliate Marketing.xlsx"
