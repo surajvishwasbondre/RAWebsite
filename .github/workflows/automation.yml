@@ -38,7 +38,8 @@ jobs:
       run: mvn test -Dtest=LandingPagesAffiliateMarketingTest
 
     - name: Upload test result file
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v3.1.2
+
       with:
         name: test-results
         path: TestData/LandingPageAutomation-Affiliate Marketing.xlsx  # Specify the path to your result file
