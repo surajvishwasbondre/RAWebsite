@@ -38,7 +38,7 @@ jobs:
         run: mvn test -Dtest=LandingPagesAffiliateMarketingTest
 
       - name: Upload test result file
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
 
         with:
           name: test-results
