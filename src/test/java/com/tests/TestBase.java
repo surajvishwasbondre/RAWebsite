@@ -42,7 +42,7 @@ public class TestBase {
 		try{
 		prop=new Properties();//1
                 //InputStream ip = getClass().getClassLoader().getResourceAsStream("config.properties");
-		FileInputStream ip=new FileInputStream("RAWebsite\\src\\test\\resources\\config.properties");//2
+		FileInputStream ip=new FileInputStream("src/test/resources/config.properties");//2
 		prop.load(ip);//3
 	}catch(FileNotFoundException e)
 	{
@@ -53,7 +53,7 @@ public class TestBase {
 	}
 	//log file setup
 	logger=Logger.getLogger(TestBase.class);  //1
-	PropertyConfigurator.configure("RAWebsite\\src\\test\\resources\\log4j.properties");//2
+	PropertyConfigurator.configure("src/test/resources/log4j.properties");//2
 	//it is for configuring the log4j setup to our app
 	}
 	
@@ -87,7 +87,7 @@ public class TestBase {
 	public void setupExtentEnv()
 	{
 		
-		htmlreporter =new ExtentHtmlReporter("RAWebsite\\extentreport\\extent-report.html");
+		htmlreporter =new ExtentHtmlReporter("extentreport/extent-report.html");
 		htmlreporter.config().setDocumentTitle("Automation Report");
 		htmlreporter.config().setReportName("functional report");
 		htmlreporter.config().setTheme(Theme.STANDARD);
