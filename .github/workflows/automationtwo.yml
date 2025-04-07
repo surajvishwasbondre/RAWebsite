@@ -37,14 +37,14 @@ jobs:
         run: mvn test -Dtest=LandingPagesAffiliateMarketingTest
 
       - name: Upload test result file
-        uses: actions/upload-artifact@v3.1.2
+        uses: actions/upload-artifact@v4
         with:
           name: test-results
           path: TestData/LandingPageAutomation-Affiliate\ Marketing.xlsx
 
       - name: Upload test log (surefire reports)
         if: always()  # Always upload logs, useful for both pass/fail
-        uses: actions/upload-artifact@v3.1.2
+        uses: actions/upload-artifact@v4
         with:
           name: test-logs
           path: target/surefire-reports/
