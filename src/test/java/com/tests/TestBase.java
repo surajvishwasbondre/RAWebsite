@@ -37,6 +37,23 @@ public class TestBase {
 	public 	static Logger logger;
 
 	public TestBase(){
+	//proprties file reading
+		try{
+		prop=new Properties();//1
+		FileInputStream ip=new FileInputStream("D:\\Eclipse Workplace\\RAWebsite\\src\\test\\resources\\config.properties");//2
+		prop.load(ip);//3
+	}catch(FileNotFoundException e)
+	{
+	e.printStackTrace();	
+	}catch(IOException e)
+	{
+	e.printStackTrace();	
+	}
+	//log file setup
+	logger=Logger.getLogger(TestBase.class);  //1
+	PropertyConfigurator.configure("D:\\Eclipse Workplace\\RAWebsite\\src\\test\\resources\\log4j.properties");//2
+	//it is for configuring the log4j setup to our app
+	}
 	
 		// Use classloader to load properties
 // try {
@@ -58,7 +75,7 @@ public class TestBase {
 try {
            String dir = System.getProperty("user.dir");
             // Define the path to the properties file
-//scr/test/resources/log4j.properties
+//scr/test/resources/config.properties
 Path filePath = Paths.get(dir, "src", "test", "java", "resources","config.properties");
             // Create a FileReader object
             FileReader reader = new FileReader(filePath.toString());
@@ -74,7 +91,26 @@ Path filePath = Paths.get(dir, "src", "test", "java", "resources","config.proper
            // TODO: handle exception
            System.out.println(e.toString());
        }
-
+//For Log4j
+try {
+           String dir = System.getProperty("user.dir");
+            // Define the path to the properties file
+//scr/test/resources/log4j.properties
+Path filePath2 = Paths.get(dir, "src", "test", "java", "resources","log4j.properties");
+            // Create a FileReader object
+            FileReader reader = new FileReader(filePath2.toString());
+            // Create a Properties object
+            Logger logger = new Logger();
+            // Load properties from file
+            logger.load(reader);
+            // Retrieve and print the property value
+            System.out.println("Stage URL: " + logger.getProperty("stageUrl"));
+            // Close the reader
+            reader.close();
+       } catch (Exception e) {
+           // TODO: handle exception
+           System.out.println(e.toString());
+       }
 	}
 	
 	@BeforeSuite
