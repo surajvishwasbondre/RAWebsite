@@ -54,7 +54,7 @@ public class LandingPagesAffiliateMarketing2 extends TestBase{
 	public void VerifyAffiliateMarketingLandingPages() throws InterruptedException, IOException {
         
         // Path to Excel file
-        String excelFilePath ="D:\\Eclipse Workplace\\RAWebsite\\TestData\\LP Affiliate Marketing SampleData.xlsx";
+        String excelFilePath ="TestData\\LP Affiliate Marketing SampleData.xlsx";
 
          FileInputStream file = new FileInputStream(excelFilePath);
              Workbook workbook = new XSSFWorkbook(file); 
@@ -143,7 +143,7 @@ public class LandingPagesAffiliateMarketing2 extends TestBase{
 
                 }
         
-            FileOutputStream out = new FileOutputStream("D:\\Eclipse Workplace\\RAWebsite\\TestData\\LP Affiliate Marketing SampleData.xlsx");
+            FileOutputStream out = new FileOutputStream("TestData\\LP Affiliate Marketing SampleData.xlsx");
             workbook.write(out);
             out.close();
      
