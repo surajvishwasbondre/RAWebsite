@@ -38,23 +38,24 @@ public class TestBase {
 
 	public TestBase(){
 	
-		//proprties file reading
-		try{
-		prop=new Properties();//1
-                //InputStream ip = getClass().getClassLoader().getResourceAsStream("config.properties");
-		FileInputStream ip=new FileInputStream(Paths.get("src", "test", "resources", "config.properties").toFile());//2
-		prop.load(ip);//3
-	}catch(FileNotFoundException e)
-	{
-	e.printStackTrace();	
-	}catch(IOException e)
-	{
-	e.printStackTrace();	
-	}
-	//log file setup
-	logger=Logger.getLogger(TestBase.class);  //1
-	PropertyConfigurator.configure("src\\test\\resources\\log4j.properties");//2
-	//it is for configuring the log4j setup to our app
+		// Use classloader to load properties
+try {
+    prop = new Properties();
+    InputStream ip = getClass().getClassLoader().getResourceAsStream("config.properties");
+    if (ip == null) {
+        throw new FileNotFoundException("Property file 'config.properties' not found in classpath");
+    }
+    prop.load(ip);
+} catch (IOException e) {
+    e.printStackTrace();
+}
+
+// Use classloader to load log4j
+URL log4jConfig = getClass().getClassLoader().getResource("log4j.properties");
+if (log4jConfig != null) {
+    PropertyConfigurator.configure(log4jConfig);
+}
+
 	}
 	
 	@BeforeSuite
