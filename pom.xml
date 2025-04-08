@@ -36,6 +36,13 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<resources>
+  <resource>
+    <directory>src/test/resources</directory>
+    <filtering>false</filtering>
+  </resource>
+</resources>
+
 	</build>
 
 	<dependencies>
