@@ -39,22 +39,40 @@ public class TestBase {
 	public TestBase(){
 	
 		// Use classloader to load properties
-try {
-    prop = new Properties();
-    InputStream ip = getClass().getClassLoader().getResourceAsStream("config.properties");
-    if (ip == null) {
-        throw new FileNotFoundException("Property file 'config.properties' not found in classpath");
-    }
-    prop.load(ip);
-} catch (IOException e) {
-    e.printStackTrace();
-}
+// try {
+//     prop = new Properties();
+//     InputStream ip = getClass().getClassLoader().getResourceAsStream("config.properties");
+//     if (ip == null) {
+//         throw new FileNotFoundException("Property file 'config.properties' not found in classpath");
+//     }
+//     prop.load(ip);
+// } catch (IOException e) {
+//     e.printStackTrace();
+// }
 
-// Use classloader to load log4j
-URL log4jConfig = getClass().getClassLoader().getResource("log4j.properties");
-if (log4jConfig != null) {
-    PropertyConfigurator.configure(log4jConfig);
-}
+// // Use classloader to load log4j
+// URL log4jConfig = getClass().getClassLoader().getResource("log4j.properties");
+// if (log4jConfig != null) {
+//     PropertyConfigurator.configure(log4jConfig);
+// }
+try {
+           String dir = System.getProperty("user.dir");
+            // Define the path to the properties file
+Path filePath = Paths.get(dir, "src", "main", "java", "RestoreSelenium", "Resource", "Configuration.properties");
+            // Create a FileReader object
+            FileReader reader = new FileReader(filePath.toString());
+            // Create a Properties object
+            Properties props = new Properties();
+            // Load properties from file
+            props.load(reader);
+            // Retrieve and print the property value
+            System.out.println("Stage URL: " + props.getProperty("stageUrl"));
+            // Close the reader
+            reader.close();
+       } catch (Exception e) {
+           // TODO: handle exception
+           System.out.println(e.toString());
+       }
 
 	}
 	
