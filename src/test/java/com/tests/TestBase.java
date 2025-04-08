@@ -58,7 +58,8 @@ public class TestBase {
 try {
            String dir = System.getProperty("user.dir");
             // Define the path to the properties file
-Path filePath = Paths.get(dir, "src", "main", "java", "RestoreSelenium", "Resource", "Configuration.properties");
+//scr/test/resources/log4j.properties
+Path filePath = Paths.get(dir, "src", "test", "java", "resources","config.properties");
             // Create a FileReader object
             FileReader reader = new FileReader(filePath.toString());
             // Create a Properties object
