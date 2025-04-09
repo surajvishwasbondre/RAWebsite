@@ -37,23 +37,23 @@ public class TestBase {
 	public 	static Logger logger;
 
 	public TestBase(){
-	// //proprties file reading
-	// 	try{
-	// 	prop=new Properties();//1
-	// 	FileInputStream ip=new FileInputStream("src\\test\\resources\\config.properties");//2
-	// 	prop.load(ip);//3
-	// }catch(FileNotFoundException e)
-	// {
-	// e.printStackTrace();	
-	// }catch(IOException e)
-	// {
-	// e.printStackTrace();	
-	// }
-	// //log file setup
-	// logger=Logger.getLogger(TestBase.class);  //1
-	// PropertyConfigurator.configure("src\\test\\resources\\log4j.properties");//2
-	// //it is for configuring the log4j setup to our app
-	// }
+	//proprties file reading
+		try{
+		prop=new Properties();//1
+		FileInputStream ip=new FileInputStream("scr\\test\\resources\\config.properties");//2
+		prop.load(ip);//3
+	}catch(FileNotFoundException e)
+	{
+	e.printStackTrace();	
+	}catch(IOException e)
+	{
+	e.printStackTrace();	
+	}
+	//log file setup
+	logger=Logger.getLogger(TestBase.class);  //1
+	PropertyConfigurator.configure("scr\\test\\resources\\log4j.properties");//2
+	//it is for configuring the log4j setup to our app
+	}
 	
 		// Use classloader to load properties
 // try {
@@ -72,46 +72,46 @@ public class TestBase {
 // if (log4jConfig != null) {
 //     PropertyConfigurator.configure(log4jConfig);
 // }
-try {
-           String dir = System.getProperty("user.dir");
-            // Define the path to the properties file
-//scr/test/resources/config.properties
-Path filePath = Paths.get(dir, "src", "test", "java", "resources","config.properties");
-            // Create a FileReader object
-            FileReader reader = new FileReader(filePath.toString());
-            // Create a Properties object
-            Properties props = new Properties();
-            // Load properties from file
-            props.load(reader);
-            // Retrieve and print the property value
-            System.out.println("Stage URL: " + props.getProperty("stageUrl"));
-            // Close the reader
-            reader.close();
-       } catch (Exception e) {
-           // TODO: handle exception
-           System.out.println(e.toString());
-       }
-//For Log4j
-try {
-           String dir = System.getProperty("user.dir");
-            // Define the path to the properties file
-//scr/test/resources/log4j.properties
-Path filePath2 = Paths.get(dir, "src", "test", "java", "resources","log4j.properties");
-            // Create a FileReader object
-            FileReader reader = new FileReader(filePath2.toString());
-            // Create a Properties object
-            Logger logger = new Logger();
-            // Load properties from file
-            logger.load(reader);
-            // Retrieve and print the property value
-            System.out.println("Stage URL: " + logger.getProperty("stageUrl"));
-            // Close the reader
-            reader.close();
-       } catch (Exception e) {
-           // TODO: handle exception
-           System.out.println(e.toString());
-       }
-	}
+// try {
+//            String dir = System.getProperty("user.dir");
+//             // Define the path to the properties file
+// //scr/test/resources/config.properties
+// Path filePath = Paths.get(dir, "src", "test", "java", "resources","config.properties");
+//             // Create a FileReader object
+//             FileReader reader = new FileReader(filePath.toString());
+//             // Create a Properties object
+//             Properties props = new Properties();
+//             // Load properties from file
+//             props.load(reader);
+//             // Retrieve and print the property value
+//             System.out.println("Stage URL: " + props.getProperty("stageUrl"));
+//             // Close the reader
+//             reader.close();
+//        } catch (Exception e) {
+//            // TODO: handle exception
+//            System.out.println(e.toString());
+//        }
+// //For Log4j
+// try {
+//            String dir = System.getProperty("user.dir");
+//             // Define the path to the properties file
+// //scr/test/resources/log4j.properties
+// Path filePath2 = Paths.get(dir, "src", "test", "java", "resources","log4j.properties");
+//             // Create a FileReader object
+//             FileReader reader = new FileReader(filePath2.toString());
+//             // Create a Properties object
+//             Logger logger = new Logger();
+//             // Load properties from file
+//             logger.load(reader);
+//             // Retrieve and print the property value
+//             System.out.println("Stage URL: " + logger.getProperty("stageUrl"));
+//             // Close the reader
+//             reader.close();
+//        } catch (Exception e) {
+//            // TODO: handle exception
+//            System.out.println(e.toString());
+//        }
+// 	}
 	
 	@BeforeSuite
 	public void initDriver(){
