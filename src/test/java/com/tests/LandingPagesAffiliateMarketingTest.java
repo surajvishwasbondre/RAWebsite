@@ -49,7 +49,8 @@ public class LandingPagesAffiliateMarketingTest extends TestBase{
 //        driver.manage().window().maximize();
         
         // Path to Excel file
-        String excelFilePath ="TestData/LandingPageAutomation-Affiliate Marketing.xlsx";
+        String excelFilePath = System.getProperty("user.dir") + "/TestData/LandingPageAutomation-Affiliate Marketing.xlsx";
+
 
          FileInputStream file = new FileInputStream(excelFilePath);
              Workbook workbook = new XSSFWorkbook(file); 
@@ -91,7 +92,8 @@ public class LandingPagesAffiliateMarketingTest extends TestBase{
                             
                             TakesScreenshot ts = (TakesScreenshot)driver;
                             File scrFile= ts.getScreenshotAs(OutputType.FILE);
-                            String filePath = System.getProperty("user.dir")+"/LandingPagesScreenshot-AffiliateMarketing/"+pageTitle+System.currentTimeMillis()+"png";
+                            String filePath = System.getProperty("user.dir") + "/LandingPagesScreenshot-AffiliateMarketing/" + pageTitle + System.currentTimeMillis() + ".png";
+
                             File destFile=new File(filePath);
                             FileUtils.copyFile(scrFile, destFile);
                            
