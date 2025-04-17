@@ -37,27 +37,53 @@ public class TestBase {
 	public 	static Logger logger;
 
 	public TestBase(){
-	//proprties file reading
-		 // try {
-   //      prop = new Properties();
-   //      String path = System.getProperty("user.dir") + "/src/test/resources/config.properties";
-   //      FileInputStream ip = new FileInputStream(path);
-   //      prop.load(ip);
-   //  } catch (FileNotFoundException e) {
-   //      e.printStackTrace();
-   //  } catch (IOException e) {
-   //      e.printStackTrace();
-   //  }
-        Properties prop = new Properties();
-InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties");
-if (input == null) {
-    throw new FileNotFoundException("Property file 'config.properties' not found in classpath");
+public TestBase() {
+    try {
+        // Load config.properties
+        prop = new Properties();
+        InputStream configInput = getClass().getClassLoader().getResourceAsStream("config.properties");
+        if (configInput == null) {
+            throw new FileNotFoundException("Property file 'config.properties' not found in classpath");
+        }
+        prop.load(configInput);
+
+        // Load log4j.properties
+        InputStream log4jInput = getClass().getClassLoader().getResourceAsStream("log4j.properties");
+        if (log4jInput == null) {
+            throw new FileNotFoundException("Property file 'log4j.properties' not found in classpath");
+        }
+        Properties log4jProps = new Properties();
+        log4jProps.load(log4jInput);
+        PropertyConfigurator.configure(log4jProps);
+
+        // Logger setup
+        logger = Logger.getLogger(TestBase.class);
+
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
 }
-prop.load(input);
-    // Log4j setup
-    logger = Logger.getLogger(TestBase.class);
-    String log4jPath = System.getProperty("user.dir") + "/src/test/resources/log4j.properties";
-    PropertyConfigurator.configure(log4jPath);
+
+
+
+
+// 	//proprties file reading
+// 		 try {
+//         prop = new Properties();
+//         String path = System.getProperty("user.dir") + "/src/test/resources/config.properties";
+//         FileInputStream ip = new FileInputStream(path);
+//         prop.load(ip);
+//     } catch (FileNotFoundException e) {
+//         e.printStackTrace();
+//     } catch (IOException e) {
+//         e.printStackTrace();
+//     }
+    
+// prop.load(input);
+//     // Log4j setup
+//     logger = Logger.getLogger(TestBase.class);
+//     String log4jPath = System.getProperty("user.dir") + "/src/test/resources/log4j.properties";
+//     PropertyConfigurator.configure(log4jPath);
 	
 		// Use classloader to load properties
 // try {
