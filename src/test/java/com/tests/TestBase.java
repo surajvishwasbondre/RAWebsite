@@ -38,22 +38,21 @@ public class TestBase {
 
 	public TestBase(){
 	//proprties file reading
-		try{
-		prop=new Properties();//1
-		FileInputStream ip=new FileInputStream("scr\\test\\resources\\config.properties");//2
-		prop.load(ip);//3
-	}catch(FileNotFoundException e)
-	{
-	e.printStackTrace();	
-	}catch(IOException e)
-	{
-	e.printStackTrace();	
-	}
-	//log file setup
-	logger=Logger.getLogger(TestBase.class);  //1
-	PropertyConfigurator.configure("scr\\test\\resources\\log4j.properties");//2
-	//it is for configuring the log4j setup to our app
-	}
+		 try {
+        prop = new Properties();
+        String path = System.getProperty("user.dir") + "/src/test/resources/config.properties";
+        FileInputStream ip = new FileInputStream(path);
+        prop.load(ip);
+    } catch (FileNotFoundException e) {
+        e.printStackTrace();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+
+    // Log4j setup
+    logger = Logger.getLogger(TestBase.class);
+    String log4jPath = System.getProperty("user.dir") + "/src/test/resources/log4j.properties";
+    PropertyConfigurator.configure(log4jPath);
 	
 		// Use classloader to load properties
 // try {
