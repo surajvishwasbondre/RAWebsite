@@ -38,8 +38,9 @@ public class TestBase {
 
 	public TestBase(){
 public TestBase() {
-    try {
-        // Load config.properties
+
+try {
+        // Load config.properties using classloader
         prop = new Properties();
         InputStream configInput = getClass().getClassLoader().getResourceAsStream("config.properties");
         if (configInput == null) {
@@ -47,22 +48,44 @@ public TestBase() {
         }
         prop.load(configInput);
 
-        // Load log4j.properties
+        // Load log4j.properties using classloader
         InputStream log4jInput = getClass().getClassLoader().getResourceAsStream("log4j.properties");
         if (log4jInput == null) {
             throw new FileNotFoundException("Property file 'log4j.properties' not found in classpath");
         }
-        Properties log4jProps = new Properties();
-        log4jProps.load(log4jInput);
-        PropertyConfigurator.configure(log4jProps);
+        PropertyConfigurator.configure(log4jInput);
 
-        // Logger setup
+        // Initialize logger
         logger = Logger.getLogger(TestBase.class);
 
     } catch (IOException e) {
         e.printStackTrace();
     }
-}
+//     try {
+//         // Load config.properties
+//         prop = new Properties();
+//         InputStream configInput = getClass().getClassLoader().getResourceAsStream("config.properties");
+//         if (configInput == null) {
+//             throw new FileNotFoundException("Property file 'config.properties' not found in classpath");
+//         }
+//         prop.load(configInput);
+
+//         // Load log4j.properties
+//         InputStream log4jInput = getClass().getClassLoader().getResourceAsStream("log4j.properties");
+//         if (log4jInput == null) {
+//             throw new FileNotFoundException("Property file 'log4j.properties' not found in classpath");
+//         }
+//         Properties log4jProps = new Properties();
+//         log4jProps.load(log4jInput);
+//         PropertyConfigurator.configure(log4jProps);
+
+//         // Logger setup
+//         logger = Logger.getLogger(TestBase.class);
+
+//     } catch (IOException e) {
+//         e.printStackTrace();
+//     }
+// }
 
 
 
@@ -97,51 +120,7 @@ public TestBase() {
 //     e.printStackTrace();
 // }
 
-// // Use classloader to load log4j
-// URL log4jConfig = getClass().getClassLoader().getResource("log4j.properties");
-// if (log4jConfig != null) {
-//     PropertyConfigurator.configure(log4jConfig);
-// }
-// try {
-//            String dir = System.getProperty("user.dir");
-//             // Define the path to the properties file
-// //scr/test/resources/config.properties
-// Path filePath = Paths.get(dir, "src", "test", "java", "resources","config.properties");
-//             // Create a FileReader object
-//             FileReader reader = new FileReader(filePath.toString());
-//             // Create a Properties object
-//             Properties props = new Properties();
-//             // Load properties from file
-//             props.load(reader);
-//             // Retrieve and print the property value
-//             System.out.println("Stage URL: " + props.getProperty("stageUrl"));
-//             // Close the reader
-//             reader.close();
-//        } catch (Exception e) {
-//            // TODO: handle exception
-//            System.out.println(e.toString());
-//        }
-// //For Log4j
-// try {
-//            String dir = System.getProperty("user.dir");
-//             // Define the path to the properties file
-// //scr/test/resources/log4j.properties
-// Path filePath2 = Paths.get(dir, "src", "test", "java", "resources","log4j.properties");
-//             // Create a FileReader object
-//             FileReader reader = new FileReader(filePath2.toString());
-//             // Create a Properties object
-//             Logger logger = new Logger();
-//             // Load properties from file
-//             logger.load(reader);
-//             // Retrieve and print the property value
-//             System.out.println("Stage URL: " + logger.getProperty("stageUrl"));
-//             // Close the reader
-//             reader.close();
-//        } catch (Exception e) {
-//            // TODO: handle exception
-//            System.out.println(e.toString());
-//        }
-// 	}
+
 	
 	@BeforeSuite
 	public void initDriver(){
