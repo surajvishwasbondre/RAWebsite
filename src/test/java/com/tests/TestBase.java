@@ -1,205 +1,106 @@
 package com.tests;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
+
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.ITestResult;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.BeforeTest;
-import com.aventstack.extentreports.ExtentReports;
-import com.aventstack.extentreports.ExtentTest;
-import com.aventstack.extentreports.Status;
+import org.testng.annotations.*;
+
+import com.aventstack.extentreports.*;
 import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
-import com.aventstack.extentreports.reporter.configuration.Theme;
 import com.utils.ScreenShot;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 public class TestBase {
-	
-	public static WebDriver driver;
-	public 	static Properties prop;
-	public  static ExtentHtmlReporter htmlreporter;
-	public  static ExtentReports extent;
-	public  static ExtentTest test;
-	public 	static Logger logger;
 
-	public TestBase(){
-public TestBase() {
+    public static WebDriver driver;
+    public static Properties prop;
+    public static ExtentHtmlReporter htmlreporter;
+    public static ExtentReports extent;
+    public static ExtentTest test;
+    public static Logger logger;
 
-try {
-        // Load config.properties using classloader
-        prop = new Properties();
-        InputStream configInput = getClass().getClassLoader().getResourceAsStream("config.properties");
-        if (configInput == null) {
-            throw new FileNotFoundException("Property file 'config.properties' not found in classpath");
+    public TestBase() {
+        try {
+            prop = new Properties();
+            InputStream configInput = getClass().getClassLoader().getResourceAsStream("config.properties");
+            if (configInput == null) {
+                throw new IOException("Property file 'config.properties' not found in the classpath");
+            }
+            prop.load(configInput);
+
+            // For Log4j
+            String log4jPath = System.getProperty("user.dir") + "/src/test/resources/log4j.properties";
+            PropertyConfigurator.configure(log4jPath);
+
+            logger = Logger.getLogger(TestBase.class);
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        prop.load(configInput);
-
-        // Load log4j.properties using classloader
-        InputStream log4jInput = getClass().getClassLoader().getResourceAsStream("log4j.properties");
-        if (log4jInput == null) {
-            throw new FileNotFoundException("Property file 'log4j.properties' not found in classpath");
-        }
-        PropertyConfigurator.configure(log4jInput);
-
-        // Initialize logger
-        logger = Logger.getLogger(TestBase.class);
-
-    } catch (IOException e) {
-        e.printStackTrace();
     }
-//     try {
-//         // Load config.properties
-//         prop = new Properties();
-//         InputStream configInput = getClass().getClassLoader().getResourceAsStream("config.properties");
-//         if (configInput == null) {
-//             throw new FileNotFoundException("Property file 'config.properties' not found in classpath");
-//         }
-//         prop.load(configInput);
 
-//         // Load log4j.properties
-//         InputStream log4jInput = getClass().getClassLoader().getResourceAsStream("log4j.properties");
-//         if (log4jInput == null) {
-//             throw new FileNotFoundException("Property file 'log4j.properties' not found in classpath");
-//         }
-//         Properties log4jProps = new Properties();
-//         log4jProps.load(log4jInput);
-//         PropertyConfigurator.configure(log4jProps);
+    @BeforeSuite
+    public void initDriver() {
+        WebDriverManager.chromedriver().setup();
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        driver.manage().deleteAllCookies();
+        driver.manage().timeouts().pageLoadTimeout(100, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+    }
 
-//         // Logger setup
-//         logger = Logger.getLogger(TestBase.class);
+    @BeforeTest
+    public void setupExtentEnv() {
+        htmlreporter = new ExtentHtmlReporter("extentreport/extent-report.html");
+        htmlreporter.config().setDocumentTitle("Automation Report");
+        htmlreporter.config().setReportName("Functional Report");
+        htmlreporter.config().setTheme(Theme.STANDARD);
 
-//     } catch (IOException e) {
-//         e.printStackTrace();
-//     }
-// }
+        extent = new ExtentReports();
+        extent.attachReporter(htmlreporter);
+        extent.setSystemInfo("Host Name", "Localhost");
+        extent.setSystemInfo("OS", "Windows 11");
+        extent.setSystemInfo("Tester Name", "Suraj");
+        extent.setSystemInfo("Browser", "Chrome");
 
+        logger.info("Extent report setup completed");
+    }
 
+    @BeforeMethod
+    public void register(Method method) {
+        test = extent.createTest(method.getName());
+    }
 
+    @AfterMethod
+    public void tearDown(ITestResult result) throws IOException {
+        if (result.getStatus() == ITestResult.FAILURE) {
+            test.log(Status.FAIL, "TEST CASE FAILED: " + result.getName());
+            test.log(Status.FAIL, result.getThrowable());
+            String screenshotPath = ScreenShot.getScreenshot(driver, result.getName());
+            test.addScreenCaptureFromPath(screenshotPath);
+        } else if (result.getStatus() == ITestResult.SKIP) {
+            test.log(Status.SKIP, "TEST CASE SKIPPED: " + result.getName());
+        } else if (result.getStatus() == ITestResult.SUCCESS) {
+            test.log(Status.PASS, "TEST CASE PASSED: " + result.getName());
+        }
+    }
 
-// 	//proprties file reading
-// 		 try {
-//         prop = new Properties();
-//         String path = System.getProperty("user.dir") + "/src/test/resources/config.properties";
-//         FileInputStream ip = new FileInputStream(path);
-//         prop.load(ip);
-//     } catch (FileNotFoundException e) {
-//         e.printStackTrace();
-//     } catch (IOException e) {
-//         e.printStackTrace();
-//     }
-    
-// prop.load(input);
-//     // Log4j setup
-//     logger = Logger.getLogger(TestBase.class);
-//     String log4jPath = System.getProperty("user.dir") + "/src/test/resources/log4j.properties";
-//     PropertyConfigurator.configure(log4jPath);
-	
-		// Use classloader to load properties
-// try {
-//     prop = new Properties();
-//     InputStream ip = getClass().getClassLoader().getResourceAsStream("config.properties");
-//     if (ip == null) {
-//         throw new FileNotFoundException("Property file 'config.properties' not found in classpath");
-//     }
-//     prop.load(ip);
-// } catch (IOException e) {
-//     e.printStackTrace();
-// }
+    @AfterTest
+    public void cleanup() {
+        extent.flush();
+    }
 
-
-	
-	@BeforeSuite
-	public void initDriver(){
-	    driver = WebDriverManager.chromedriver().create();
-		
-//		String browsername=prop.getProperty("browser");
-//		if(browsername.equals("firefox"))
-//		{	
-//			System.setProperty("webdriver.firefox.marionette",prop.getProperty("firefoxexepath")); 
-//			driver=new FirefoxDriver();
-//			logger.info("firefox browser opened");
-//			}else if(browsername.equals("chrome")) 
-//		  {	
-//			System.setProperty("webdriver.chrome.driver",prop.getProperty("chromeexepath")); 
-//			driver=new ChromeDriver();
-//			logger.debug("Chrome driver binary successfully set");
-//			logger.info("chrome browser opened");
-//	 	 }
-		
-	  	 driver.manage().window().maximize();
-	  	 driver.manage().deleteAllCookies();
-	  	 driver.manage().timeouts().pageLoadTimeout(100, TimeUnit.SECONDS);
-	  	 driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-	  	 
-	 	}
-
-	@BeforeTest
-	
-	public void setupExtentEnv()
-	{
-		
-		htmlreporter =new ExtentHtmlReporter("extentreport\\extent-report.html");
-		htmlreporter.config().setDocumentTitle("Automation Report");
-		htmlreporter.config().setReportName("functional report");
-		htmlreporter.config().setTheme(Theme.STANDARD);
-			extent=new ExtentReports();
-			extent.attachReporter(htmlreporter);
-			extent.setSystemInfo("HOST NAME", "LOCALHOST");
-			extent.setSystemInfo("OS", "WINDOWS 11");
-			extent.setSystemInfo("Tester NAME", "Suraj");
-			extent.setSystemInfo("Browser", "Chrome");
-			logger.info("extent report set");
-	}
-	
-	@BeforeMethod
-	public void register(Method method) {
-		String testname=method.getName();
-			test=extent.createTest(testname);
-			
-		}
-
-	@AfterMethod
-	public void tearDown(ITestResult result) throws IOException {
-	if(result.getStatus()==ITestResult.FAILURE)
-	{
-		test.log(Status.FAIL, "TEST CASE FAILED is"+result.getName());
-		test.log(Status.FAIL, "TEST CASE FAILED is"+result.getThrowable());
-		String screenshotpath=ScreenShot.getScreenshot(driver,result.getName());
-		test.addScreenCaptureFromPath(screenshotpath);
-	}else if(result.getStatus()==ITestResult.SKIP)
-	{
-		test.log(Status.SKIP, "TEST CASE SkIPPED:"+result.getName());
-	}
-	else if(result.getStatus()==ITestResult.SUCCESS)
-	{
-		test.log(Status.PASS, "TEST CASE PASSED:"+result.getName());
-	}
-	}
-
-	@AfterTest
-	
-	public void cleanup()
-	{
-		extent.flush();
-	}
-	
-	@AfterSuite
-	public void browserTeardown()
-	{
-		driver.quit();
-	}
+    @AfterSuite
+    public void browserTeardown() {
+        driver.quit();
+    }
 }
