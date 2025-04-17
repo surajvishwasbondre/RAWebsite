@@ -38,17 +38,22 @@ public class TestBase {
 
 	public TestBase(){
 	//proprties file reading
-		 try {
-        prop = new Properties();
-        String path = System.getProperty("user.dir") + "/src/test/resources/config.properties";
-        FileInputStream ip = new FileInputStream(path);
-        prop.load(ip);
-    } catch (FileNotFoundException e) {
-        e.printStackTrace();
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
-
+		 // try {
+   //      prop = new Properties();
+   //      String path = System.getProperty("user.dir") + "/src/test/resources/config.properties";
+   //      FileInputStream ip = new FileInputStream(path);
+   //      prop.load(ip);
+   //  } catch (FileNotFoundException e) {
+   //      e.printStackTrace();
+   //  } catch (IOException e) {
+   //      e.printStackTrace();
+   //  }
+        Properties prop = new Properties();
+InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties");
+if (input == null) {
+    throw new FileNotFoundException("Property file 'config.properties' not found in classpath");
+}
+prop.load(input);
     // Log4j setup
     logger = Logger.getLogger(TestBase.class);
     String log4jPath = System.getProperty("user.dir") + "/src/test/resources/log4j.properties";
