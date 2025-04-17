@@ -40,8 +40,7 @@ public class TestBase {
 	//proprties file reading
 		 try {
         prop = new Properties();
-        String path = System.getProperty("user.dir") + "target/classes/config.properties";
-// "/src/test/resources/config.properties";
+        String path = System.getProperty("user.dir") + "/src/test/resources/config.properties";
         FileInputStream ip = new FileInputStream(path);
         prop.load(ip);
     } catch (FileNotFoundException e) {
@@ -52,8 +51,7 @@ public class TestBase {
 
     // Log4j setup
     logger = Logger.getLogger(TestBase.class);
-    String log4jPath = System.getProperty("user.dir") + "target/classes/log4j.properties"
-//"/src/test/resources/log4j.properties";
+    String log4jPath = System.getProperty("user.dir") + "/src/test/resources/log4j.properties";
     PropertyConfigurator.configure(log4jPath);
 	
 		// Use classloader to load properties
